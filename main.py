@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+from playwright.sync_api import sync_playwright
 
 while True:
     url = input("Enter URL to crawl or press q to quit: ")
@@ -15,8 +15,16 @@ while True:
         response = requests.get(fixedUrl)
 
         # crawl
-        soup = BeautifulSoup(response.content, "html.parser")
-        print(soup.find('title').string)
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+
+            page.goto(fixedUrl)
+            print(f'Title: "{page.title()}"', end="\n\n")
+            print('--------------------------------------------')
+
+            # for link in links:
+            #     print(f'{link["href"]}', end="\n\n")
 
     except requests.exceptions.RequestException:
         print("Invalid URL. Please try again.")
