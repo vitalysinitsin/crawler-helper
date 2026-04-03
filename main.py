@@ -20,11 +20,15 @@ while True:
             page = browser.new_page()
 
             page.goto(fixedUrl)
-            print(f'Title: "{page.title()}"', end="\n\n")
+            content = page.content()
+            print(content)
+            page.wait_for_load_state('networkidle')
+            print(f'All links from: "{page.title()}"')
             print('--------------------------------------------')
 
-            # for link in links:
-            #     print(f'{link["href"]}', end="\n\n")
+            links = page.locator('a').all()
+            for link in links:
+                print(f'{link.get_attribute('href')}', end="\n\n")
 
     except requests.exceptions.RequestException:
         print("Invalid URL. Please try again.")
