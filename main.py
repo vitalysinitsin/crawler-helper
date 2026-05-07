@@ -3,28 +3,12 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import sys
 import tempfile
 from pathlib import Path
 from typing import Any
 
-
-def parse_hub_urls(raw: str) -> list[str]:
-    tokens = re.split(r"[\s,]+", raw.strip())
-    urls: list[str] = []
-    for tok in tokens:
-        u = tok.strip()
-        if not u:
-            continue
-        if not u.startswith(("http://", "https://")):
-            u = f"https://{u}"
-        urls.append(u)
-    return urls
-
-
-def read_hub_urls_file(path: Path) -> list[str]:
-    return parse_hub_urls(path.read_text(encoding="utf-8"))
+from urls import read_hub_urls_file
 
 
 def load_json_jobs(path: Path) -> list[dict[str, Any]]:
